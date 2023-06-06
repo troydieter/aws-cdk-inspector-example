@@ -9,9 +9,10 @@ from uuid import uuid4
 from aws_cdk import core, CustomResourceProvider, CustomResource
 from aws_cdk.aws_iam import PolicyStatement
 from aws_cdk.aws_lambda import SingletonFunction, InlineCode, Runtime
+from aws_cdk.core import Construct
 
 
-class InspectorSubscriberCustomResource(core.Construct):
+class InspectorSubscriberCustomResource(Construct):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id)
 
