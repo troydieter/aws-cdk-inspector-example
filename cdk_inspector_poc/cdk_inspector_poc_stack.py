@@ -1,18 +1,20 @@
+from aws_cdk import Stack, CfnMapping, CfnTag
+from aws_cdk import aws_iam as iam
 from aws_cdk import aws_inspector as inspector
+from aws_cdk import aws_lambda
 from aws_cdk import aws_sns as sns
 from aws_cdk import aws_sns_subscriptions as sns_subs
-from aws_cdk import aws_iam as iam
-from aws_cdk import aws_lambda
-from aws_cdk import core
+from constructs import Construct
+
 from inspector_subscriber_crd import InspectorSubscriberCustomResource
 
 
-class CdkInspectorPocStack(core.Stack):
+class CdkInspectorPocStack(Stack):
 
-    def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        sns_principals_mapping = core.CfnMapping(
+        sns_principals_mapping = CfnMapping(
             scope=self,
             id="Inspector SNS Principals",
             mapping={
@@ -31,7 +33,7 @@ class CdkInspectorPocStack(core.Stack):
             }
         )
 
-        inspector_rules_mapping = core.CfnMapping(
+        inspector_rules_mapping = CfnMapping(
             scope=self,
             id="Inspector Rule packages",
             mapping={
@@ -65,7 +67,7 @@ class CdkInspectorPocStack(core.Stack):
         resource_group = inspector.CfnResourceGroup(
             scope=self,
             id="CDK test resource group",
-            resource_group_tags=[core.CfnTag(key="Inspector", value="true")]
+            resource_group_tags=[CfnTag(key="Inspector", value="true")]
         )
         assessment_target = inspector.CfnAssessmentTarget(
             scope=self,

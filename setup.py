@@ -5,13 +5,13 @@ with open("README.md") as fp:
 
 setuptools.setup(
     name="cdk_inspector_poc",
-    version="1.0.0",
+    version="1.1",
 
     description="AWS Inspector CDK POC",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    author="odonoha@luxoft.com",
+    author="troydieter@gmail.com",
     package_dir={"": "cdk_inspector_poc"},
     packages=setuptools.find_packages(where="cdk_inspector_poc"),
 

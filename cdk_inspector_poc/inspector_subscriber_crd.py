@@ -1,10 +1,14 @@
-from aws_cdk import (
-    aws_cloudformation as cfn,
-    aws_lambda as lambda_,
-    aws_iam as iam,
-    core
-)
+# from aws_cdk import (
+#     aws_cloudformation as cfn,
+#     aws_lambda as lambda_,
+#     aws_iam as iam,
+#     core
+# )
 from uuid import uuid4
+
+from aws_cdk import core, CustomResourceProvider, CustomResource
+from aws_cdk.aws_iam import PolicyStatement
+from aws_cdk.aws_lambda import SingletonFunction, InlineCode, Runtime
 
 
 class InspectorSubscriberCustomResource(core.Construct):
@@ -14,24 +18,24 @@ class InspectorSubscriberCustomResource(core.Construct):
         with open("crd_function/crd.py") as fp:
             code_body = fp.read()
 
-        crd_lambda = lambda_.SingletonFunction(
+        crd_lambda = SingletonFunction(
             self, "Singleton",
             uuid=str(uuid4()),
-            code=lambda_.InlineCode(code_body),
+            code=InlineCode(code_body),
             handler="index.lambda_handler",
             timeout=core.Duration.seconds(300),
-            runtime=lambda_.Runtime.PYTHON_3_7,
+            runtime=Runtime.PYTHON_3_7,
         )
         crd_lambda.add_to_role_policy(
-            statement=iam.PolicyStatement(
+            statement=PolicyStatement(
                 actions=["inspector:SubscribeToEvent"],
                 resources=["*"]
             )
         )
 
-        resource = cfn.CustomResource(
+        resource = CustomResource(
             self, "Resource",
-            provider=cfn.CustomResourceProvider.lambda_(handler=crd_lambda),
+            provider=CustomResourceProvider.lambda_(handler=crd_lambda),
             properties=kwargs,
         )
 
